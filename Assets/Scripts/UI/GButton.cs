@@ -61,7 +61,6 @@ namespace FairyGUI
         public GButton()
         {
             sound = UIConfig.buttonSound;
-            soundVolumeScale = UIConfig.buttonSoundVolumeScale;
             changeStateOnClick = true;
             _downEffectValue = 0.8f;
             _title = string.Empty;
@@ -629,7 +628,7 @@ namespace FairyGUI
         private void __click()
         {
             if (sound != null && sound.nativeClip != null)
-                Stage.inst.PlayOneShotSound(sound.nativeClip, soundVolumeScale);
+                Stage.inst.PlayOneShotSound(sound.nativeClip, UIConfig.buttonSoundVolumeScale * soundVolumeScale);
 
             if (_mode == ButtonMode.Check)
             {
