@@ -27,7 +27,7 @@ namespace FairyGUI
 
         MovieClip _content;
         GObject _errorSign;
-        GComponent _content2;
+        protected GComponent _content2;
 
 #if FAIRYGUI_PUERTS
         public Action __loadExternal;
@@ -375,7 +375,7 @@ namespace FairyGUI
         /// <summary>
         /// 
         /// </summary>
-        protected void LoadContent()
+        private void LoadContent()
         {
             ClearContent();
 
@@ -421,20 +421,7 @@ namespace FairyGUI
                 }
                 else if (_contentItem.type == PackageItemType.Component)
                 {
-                    GObject obj = UIPackage.CreateObjectFromURL(itemURL);
-                    if (obj == null)
-                        SetErrorState();
-                    else if (!(obj is GComponent))
-                    {
-                        obj.Dispose();
-                        SetErrorState();
-                    }
-                    else
-                    {
-                        _content2 = (GComponent)obj;
-                        ((Container)displayObject).AddChild(_content2.displayObject);
-                        UpdateLayout();
-                    }
+                    LoadComponentContent(itemURL);
                 }
                 else
                 {
@@ -448,6 +435,24 @@ namespace FairyGUI
             }
             else
                 SetErrorState();
+        }
+
+        protected virtual void LoadComponentContent(string itemURL)
+        {
+            GObject obj = UIPackage.CreateObjectFromURL(itemURL);
+            if (obj == null)
+                SetErrorState();
+            else if (!(obj is GComponent))
+            {
+                obj.Dispose();
+                SetErrorState();
+            }
+            else
+            {
+                _content2 = (GComponent)obj;
+                ((Container)displayObject).AddChild(_content2.displayObject);
+                UpdateLayout();
+            }
         }
 
         virtual protected void LoadExternal()
@@ -498,7 +503,7 @@ namespace FairyGUI
             UpdateLayout();
         }
 
-        private void SetErrorState()
+        protected void SetErrorState()
         {
             if (!showErrorSign || !Application.isPlaying)
                 return;
@@ -651,13 +656,17 @@ namespace FairyGUI
                 _content.texture = null;
             }
             _content.frames = null;
+            ClearComponentContent();
+            _contentItem = null;
+        }
 
+        protected virtual void ClearComponentContent()
+        {
             if (_content2 != null)
             {
                 _content2.Dispose();
                 _content2 = null;
             }
-            _contentItem = null;
         }
 
         override protected void HandleSizeChanged()
