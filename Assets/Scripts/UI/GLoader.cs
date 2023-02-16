@@ -616,7 +616,7 @@ namespace FairyGUI
             }
 
             if (_content2 != null)
-                _content2.SetScale(sx, sy);
+                _content2.SetSize(contentWidth, contentHeight);
             else
                 _content.size = new Vector2(contentWidth, contentHeight);
 
