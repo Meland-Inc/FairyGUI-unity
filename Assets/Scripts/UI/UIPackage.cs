@@ -616,6 +616,23 @@ namespace FairyGUI
         }
 
         /// <summary>
+        /// 通过包名和资源名查询是否存在这个资源
+        /// </summary>
+        /// <param name="pkg"></param>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        public static bool HasObject(string pkg, string res)
+        {
+            UIPackage package = GetByName(pkg);
+            if (package == null)
+            {
+                return false;
+            }
+
+            return package._itemsByName.ContainsKey(res);
+        }
+
+        /// <summary>
         /// Set strings source.
         /// </summary>
         /// <param name="source"></param>
