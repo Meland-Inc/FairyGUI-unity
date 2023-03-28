@@ -179,7 +179,7 @@ namespace FairyGUI
             camera.orthographicSize = DefaultCameraSize;
             camera.nearClipPlane = -30;
             camera.farClipPlane = 30;
-
+            camera.hideFlags = HideFlags.HideInHierarchy;
 #if UNITY_5_4_OR_NEWER
             camera.stereoTargetEye = StereoTargetEyeMask.None;
 #endif
