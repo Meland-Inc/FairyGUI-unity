@@ -112,14 +112,14 @@ namespace FairyGUI
                     _keyboard = new FairyGUI.TouchScreenKeyboard();
                     keyboardInput = true;
 #endif
-                    _clickTestThreshold = 50;
+                    _clickTestThreshold = 150;
                 }
                 else
                 {
                     _keyboard = null;
                     keyboardInput = false;
                     Stage.inst.ResetInputState();
-                    _clickTestThreshold = 10;
+                    _clickTestThreshold = 50;
                 }
             }
         }
@@ -1567,7 +1567,10 @@ namespace FairyGUI
 
             UpdateEvent();
 
-            if (Mathf.Abs(x - downX) > 50 || Mathf.Abs(y - downY) > 50) clickCancelled = true;
+            if (Mathf.Abs(x - downX) > Stage._clickTestThreshold || Mathf.Abs(y - downY) > Stage._clickTestThreshold)
+            {
+                clickCancelled = true;
+            }
 
             if (touchMonitors.Count > 0)
             {
