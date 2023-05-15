@@ -112,14 +112,14 @@ namespace FairyGUI
                     _keyboard = new FairyGUI.TouchScreenKeyboard();
                     keyboardInput = true;
 #endif
-                    _clickTestThreshold = 150;
+                    _clickTestThreshold = 50;
                 }
                 else
                 {
                     _keyboard = null;
                     keyboardInput = false;
                     Stage.inst.ResetInputState();
-                    _clickTestThreshold = 50;
+                    _clickTestThreshold = 150;
                 }
             }
         }
