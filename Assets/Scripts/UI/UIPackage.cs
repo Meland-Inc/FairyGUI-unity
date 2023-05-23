@@ -458,6 +458,18 @@ namespace FairyGUI
         }
 
         /// <summary>
+        /// Create a UI object and cast to the type of the base class.
+        /// </summary>
+        /// <param name="pkgName"></param>
+        /// <param name="resName"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>T</returns>
+        public static T CreateObject<T>(string pkgName, string resName) where T : GObject
+        {
+            return (T)CreateObject(pkgName, resName, typeof(T));
+        }
+
+        /// <summary>
         /// Create a UI object.
         /// </summary>
         /// <param name="url">Resource url.</param>
