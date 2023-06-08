@@ -119,7 +119,7 @@ namespace FairyGUI
                     _keyboard = null;
                     keyboardInput = false;
                     Stage.inst.ResetInputState();
-                    _clickTestThreshold = 150;
+                    _clickTestThreshold = 300;
                 }
             }
         }
