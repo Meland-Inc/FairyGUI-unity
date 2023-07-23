@@ -1050,6 +1050,11 @@ namespace FairyGUI
 
         void HandleMouseEvents()
         {
+            if (!Application.isFocused)
+            {
+                return;
+            }
+
             TouchInfo touch = _touches[0];
             if (touch.x != _touchPosition.x || touch.y != _touchPosition.y)
             {
