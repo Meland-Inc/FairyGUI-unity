@@ -9,6 +9,7 @@ namespace FairyGUI
     public class GImage : GObject, IColorGear
     {
         Image _content;
+        private PackageItem _contentItem;
 
         public GImage()
         {
@@ -131,20 +132,20 @@ namespace FairyGUI
         override public void ConstructFromResource()
         {
             this.gameObjectName = packageItem.name;
-            
-            PackageItem contentItem = packageItem.getBranch();
-            sourceWidth = contentItem.width;
-            sourceHeight = contentItem.height;
+
+            _contentItem = packageItem.getBranch();
+            sourceWidth = _contentItem.width;
+            sourceHeight = _contentItem.height;
             initWidth = sourceWidth;
             initHeight = sourceHeight;
 
-            contentItem = contentItem.getHighResolution();
-            contentItem.Load();
-            _content.scale9Grid = contentItem.scale9Grid;
-            _content.scaleByTile = contentItem.scaleByTile;
-            _content.tileGridIndice = contentItem.tileGridIndice;
-            _content.texture = contentItem.texture;
-            _content.textureScale = new Vector2(contentItem.width / (float)sourceWidth, contentItem.height / (float)sourceHeight);
+            _contentItem = _contentItem.getHighResolution();
+            _contentItem.Load();
+            _content.scale9Grid = _contentItem.scale9Grid;
+            _content.scaleByTile = _contentItem.scaleByTile;
+            _content.tileGridIndice = _contentItem.tileGridIndice;
+            _content.texture = _contentItem.texture;
+            _content.textureScale = new Vector2(_contentItem.width / (float)sourceWidth, _contentItem.height / (float)sourceHeight);
 
             SetSize(sourceWidth, sourceHeight);
         }
@@ -165,6 +166,17 @@ namespace FairyGUI
                 _content.fillClockwise = buffer.ReadBool();
                 _content.fillAmount = buffer.ReadFloat();
             }
+        }
+
+        public override void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _contentItem?.Unload();
+            base.Dispose();
         }
     }
 }

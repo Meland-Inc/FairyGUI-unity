@@ -71,6 +71,7 @@ namespace FairyGUI
                     }
                 }
             }
+            _contentItem?.Unload();
             if (_errorSign != null)
                 _errorSign.Dispose();
             if (_content2 != null)
@@ -390,6 +391,7 @@ namespace FairyGUI
 
         protected void LoadFromPackage(string itemURL)
         {
+            _contentItem?.Unload();
             _contentItem = UIPackage.GetItemByURL(itemURL);
 
             if (_contentItem != null)
@@ -657,6 +659,7 @@ namespace FairyGUI
             }
             _content.frames = null;
             ClearComponentContent();
+            _contentItem?.Unload();
             _contentItem = null;
         }
 

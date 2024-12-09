@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using FairyGUI.Utils;
+using System;
 
 namespace FairyGUI
 {
@@ -8,6 +9,7 @@ namespace FairyGUI
     /// </summary>
     public class PackageItem
     {
+        public Action<PackageItem> OnRealUnload;
         public UIPackage owner;
 
         public PackageItemType type;
@@ -49,10 +51,67 @@ namespace FairyGUI
         //spine/dragonbones
         public Vector2 skeletonAnchor;
         public object skeletonAsset;
+        public int LoadCounter { get; private set; } = 0;
 
         public object Load()
         {
+            LoadCounter++;
             return owner.GetItemAsset(this);
+        }
+
+        public void Unload()
+        {
+            if (LoadCounter == 0)
+            {
+                Debug.LogError("Redundant unload: " + file);
+                return;
+            }
+
+            LoadCounter--;
+            if (LoadCounter == 0)
+            {
+                RealUnload();
+            }
+        }
+
+        public void RealUnload()
+        {
+            if (type == PackageItemType.Image)
+            {
+                if (texture != null)
+                {
+                    texture = null;
+                    // OnRealUnload?.Invoke(this);//image类型暂时不用派发，目前业务层没有监听，将来也不大可能有，节省性能
+                }
+
+                PackageItem refAtlasPackageItem = owner.GetAtlasPackageItem(id);
+                if (refAtlasPackageItem != null)
+                {
+                    refAtlasPackageItem.Unload();
+                }
+            }
+            else if (type == PackageItemType.Atlas)
+            {
+                if (texture != null)
+                {
+                    texture.Unload();
+                    texture = null;
+                    OnRealUnload?.Invoke(this);
+                }
+            }
+            else if (type == PackageItemType.Sound)
+            {
+                if (audioClip != null)
+                {
+                    audioClip.Unload();
+                    audioClip = null;
+                    OnRealUnload?.Invoke(this);
+                }
+            }
+            else
+            {
+                //其他的暂时不需要处理
+            }
         }
 
         public PackageItem getBranch()
