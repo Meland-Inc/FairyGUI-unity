@@ -118,7 +118,9 @@ Shader "FairyGUI/Text"
                 {
                     fixed4 col = i.color;
                     col.a *= tex2D(_MainTex, i.texcoord).a;
-
+                    #if !defined(UNITY_COLORSPACE_GAMMA)
+                    col.rgb = LinearToGammaSpace(col.rgb);
+                    #endif
                     #ifdef GRAYED
                     fixed grey = dot(col.rgb, fixed3(0.299, 0.587, 0.114));  
                     col.rgb = fixed3(grey, grey, grey);

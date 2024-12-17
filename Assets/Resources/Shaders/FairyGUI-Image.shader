@@ -128,7 +128,9 @@ Shader "FairyGUI/Image"
                 fixed4 frag (v2f i) : SV_Target
                 {
                     fixed4 col = tex2D(_MainTex, i.texcoord.xy / i.texcoord.w) * i.color;
-
+                    #if !defined(UNITY_COLORSPACE_GAMMA)
+                    col.rgb = LinearToGammaSpace(col.rgb);
+                    #endif
                     #ifdef COMBINED
                     col.a *= tex2D(_AlphaTex, i.texcoord.xy / i.texcoord.w).g;
                     #endif
