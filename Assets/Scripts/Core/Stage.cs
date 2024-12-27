@@ -179,7 +179,7 @@ namespace FairyGUI
                 || isOSX)
                 touchScreen = false;
             else
-                touchScreen = Input.touchSupported && SystemInfo.deviceType != DeviceType.Desktop;
+                touchScreen = Input.touchSupported && Application.isMobilePlatform;
             //在PC上，是否retina屏对输入法位置，鼠标滚轮速度都有影响，但现在没发现Unity有获得的方式。仅判断是否Mac可能不够（外接显示器的情况）。所以最好自行设置。
             devicePixelRatio = (isOSX && Screen.dpi > 96) ? 2 : 1;
 
