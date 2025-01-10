@@ -10,6 +10,7 @@ namespace FairyGUI
     {
         MovieClip _content;
         EventListener _onPlayEnd;
+        PackageItem _contentItem;
 
         public GMovieClip()
         {
@@ -157,19 +158,19 @@ namespace FairyGUI
         override public void ConstructFromResource()
         {
             this.gameObjectName = packageItem.name;
-            
-            PackageItem contentItem = packageItem.getBranch();
-            sourceWidth = contentItem.width;
-            sourceHeight = contentItem.height;
+
+            _contentItem = packageItem.getBranch();
+            sourceWidth = _contentItem.width;
+            sourceHeight = _contentItem.height;
             initWidth = sourceWidth;
             initHeight = sourceHeight;
-            contentItem = contentItem.getHighResolution();
-            contentItem.Load();
+            _contentItem = _contentItem.getHighResolution();
+            _contentItem.Load();
 
-            _content.interval = contentItem.interval;
-            _content.swing = contentItem.swing;
-            _content.repeatDelay = contentItem.repeatDelay;
-            _content.frames = contentItem.frames;
+            _content.interval = _contentItem.interval;
+            _content.swing = _contentItem.swing;
+            _content.repeatDelay = _contentItem.repeatDelay;
+            _content.frames = _contentItem.frames;
 
             SetSize(sourceWidth, sourceHeight);
         }
@@ -185,6 +186,17 @@ namespace FairyGUI
             _content.graphics.flip = (FlipType)buffer.ReadByte();
             _content.frame = buffer.ReadInt();
             _content.playing = buffer.ReadBool();
+        }
+
+        public override void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _contentItem?.Unload();
+            base.Dispose();
         }
     }
 }

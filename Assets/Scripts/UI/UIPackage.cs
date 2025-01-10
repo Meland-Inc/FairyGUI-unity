@@ -1005,16 +1005,7 @@ namespace FairyGUI
             for (int i = 0; i < cnt; i++)
             {
                 PackageItem pi = _items[i];
-                if (pi.type == PackageItemType.Atlas)
-                {
-                    if (pi.texture != null)
-                        pi.texture.Unload();
-                }
-                else if (pi.type == PackageItemType.Sound)
-                {
-                    if (pi.audioClip != null)
-                        pi.audioClip.Unload();
-                }
+                pi.RealUnload();
             }
 
             if (unloadBundleByFGUI &&
@@ -1051,12 +1042,18 @@ namespace FairyGUI
                 if (pi.type == PackageItemType.Atlas)
                 {
                     if (pi.texture != null && pi.texture.nativeTexture == null)
-                        LoadAtlas(pi);
+                    {
+                        _ = pi.Load();
+                        // LoadAtlas(pi);
+                    }
                 }
                 else if (pi.type == PackageItemType.Sound)
                 {
                     if (pi.audioClip != null && pi.audioClip.nativeClip == null)
-                        LoadSound(pi);
+                    {
+                        _ = pi.Load();
+                        // LoadSound(pi);
+                    }
                 }
             }
         }
@@ -1258,7 +1255,7 @@ namespace FairyGUI
         /// <param name="item"></param>
         /// <param name="asset"></param>
         /// <param name="destroyMethod"></param>
-        public void SetItemAsset(PackageItem item, object asset, DestroyMethod destroyMethod)
+        public void SetItemAsset(PackageItem item, object asset, DestroyMethod destroyMethod, string assetName)
         {
             switch (item.type)
             {
@@ -1290,11 +1287,26 @@ namespace FairyGUI
             }
         }
 
+        public PackageItem GetAtlasPackageItem(string spriteId)
+        {
+            if (spriteId == null)
+            {
+                return null;
+            }
+
+            AtlasSprite sprite = _sprites.GetValueOrDefault(spriteId, null);
+            if (sprite == null)
+            {
+                return null;
+            }
+
+            return sprite.atlas;
+        }
+
         void LoadAtlas(PackageItem item)
         {
             string ext = Path.GetExtension(item.file);
-            string fileName = item.file.Substring(0, item.file.Length - ext.Length);
-
+            string fileName = item.file[..^ext.Length];
             if (_loadAsyncFunc != null)
             {
                 _loadAsyncFunc(fileName, ext, typeof(Texture), item);
@@ -1372,7 +1384,9 @@ namespace FairyGUI
             AtlasSprite sprite;
             if (_sprites.TryGetValue(item.id, out sprite))
             {
-                NTexture atlas = (NTexture)GetItemAsset(sprite.atlas);
+                // NTexture atlas = (NTexture)GetItemAsset(sprite.atlas);
+                // Debug.Log($"Load atlas {sprite.atlas.file} from {item.name}");
+                NTexture atlas = (NTexture)sprite.atlas.Load();
                 if (atlas.width == sprite.rect.width && atlas.height == sprite.rect.height)
                     item.texture = atlas;
                 else
@@ -1385,7 +1399,7 @@ namespace FairyGUI
         void LoadSound(PackageItem item)
         {
             string ext = Path.GetExtension(item.file);
-            string fileName = item.file.Substring(0, item.file.Length - ext.Length);
+            string fileName = item.file[..^ext.Length];
 
             if (_loadAsyncFunc != null)
             {

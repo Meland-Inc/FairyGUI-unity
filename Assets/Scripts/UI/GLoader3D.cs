@@ -47,6 +47,7 @@ namespace FairyGUI
 
         override public void Dispose()
         {
+            _contentItem?.Unload();
             _content.Dispose();
             base.Dispose();
         }
@@ -339,6 +340,7 @@ namespace FairyGUI
             if (string.IsNullOrEmpty(_url))
                 return;
 
+            _contentItem?.Unload();
             _contentItem = UIPackage.GetItemByURL(_url);
 
             if (_contentItem != null)
@@ -507,6 +509,7 @@ namespace FairyGUI
                     FreeExternal();
             }
             _content.wrapTarget = null;
+            _contentItem?.Unload();
             _contentItem = null;
         }
 
