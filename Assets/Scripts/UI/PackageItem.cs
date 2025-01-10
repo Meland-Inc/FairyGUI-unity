@@ -52,6 +52,7 @@ namespace FairyGUI
         public Vector2 skeletonAnchor;
         public object skeletonAsset;
         public int LoadCounter { get; private set; } = 0;
+        public bool IsRealUnloaded { get; private set; } = false;
 
         public object Load()
         {
@@ -76,6 +77,12 @@ namespace FairyGUI
 
         public void RealUnload()
         {
+            if (IsRealUnloaded)
+            {
+                return;
+            }
+
+            IsRealUnloaded = true;
             if (type == PackageItemType.Image)
             {
                 if (texture != null)
